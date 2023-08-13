@@ -34,3 +34,31 @@ func main() {
 	go counter(channel) // lauched using go routine
 	printer(channel)
 }
+
+//Another function
+
+/*
+package main
+
+import "fmt"
+
+func sendData(ch chan<- int) {
+	for i := 1; i <= 5; i++ {
+		ch <- i // Send data into the channel
+	}
+	close(ch) // Close the channel after sending all data
+}
+
+func main() {
+	ch := make(chan int) // Create an unbuffered channel of integers
+
+	go sendData(ch) // Start a goroutine to send data into the channel
+
+	// Receive data from the channel until it is closed
+	for data := range ch {
+		fmt.Println("Received:", data)
+	}
+}
+
+
+*/

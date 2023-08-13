@@ -18,3 +18,24 @@ func main() {
 	fmt.Println(y)
 
 }
+
+//another example
+
+/*
+package main
+
+import "fmt"
+
+func main() {
+    // Initialize and assign an anonymous function to the variable "add"
+    add := func(a, b int) int {
+        return a + b
+    }
+
+    // Call the anonymous function through the "add" variable
+    result := add(3, 5)
+    fmt.Println(result) // Output: 8
+}
+
+
+*/
