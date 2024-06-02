@@ -1,4 +1,4 @@
-Theory about slices :
+## Theory about slices :
 
 - Slice is reference to an underlying array. So when me make change in slice it will affect the underlying array also.
 

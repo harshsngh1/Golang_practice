@@ -78,3 +78,173 @@ Key points about the select statement:
 - It allows you to wait for multiple channel operations simultaneously.
 - If multiple channels are ready, one of them is selected at random (uniform distribution).
 - If no channel operation is ready and there's a default clause, the code inside the default block is executed. If there's no default   and no channel operation is ready, the select statement blocks until at least one of the channels becomes ready.
+
+## Important Point about channels
+
+- this code works fine
+```
+ch := make(chan int)
+go multiply(ch)
+ch<-10
+```
+
+- But this code breaks
+```
+ch := make(chan int)
+ch<-10
+go multiply(ch)
+```
+
+The reason for this is that we are using unbuffered channel which need a sender and receiver and here in 2nd code we are pushing data in unbuffered channel with no receiver (go routine), causing the main goroutine to block indefinitely.  As a result, the multiply goroutine never gets a chance to start, leading to a deadlock.
+So to solve this we can use bufferend channel : 
+```
+ch := make(chan int, 1)  // Create a buffered channel with capacity 1
+ch <- 10                 // This will not block because the channel has buffer space
+go multiply(ch)
+```
+- Bidirectional channels : By default, channels in Go are bidirectional, meaning they can be used for both sending and receiving values.
+```
+func main() {
+    // Create a bidirectional channel
+    ch := make(chan int)
+
+    // Goroutine to send a value into the channel
+    go func() {
+        ch <- 42
+    }()
+
+    // Receive the value from the channel
+    value := <-ch
+    fmt.Println("Received:", value)
+}
+```
+- Unidirectional Channels : Unidirectional channels restrict the direction of data flow. A channel can be constrained to only send or only receive values. This is useful for making the intentions of your code clear and for avoiding accidental misuse of the channel.
+-- Send-Only Channels : A send-only channel is declared by adding chan<- before the channel type. This restricts the channel to only sending values.
+```
+package main
+
+import "fmt"
+
+func sendValues(ch chan<- int) {
+    ch <- 42
+}
+
+func main() {
+    // Create a bidirectional channel
+    ch := make(chan int)
+
+    // Start a goroutine to send a value
+    go sendValues(ch)
+
+    // Receive the value from the channel
+    value := <-ch
+    fmt.Println("Received:", value)
+}
+
+In this example, the sendValues function takes a send-only channel (chan<- int). The function can send values into the channel but cannot receive from it.
+```
+Receive-Only Channels : A receive-only channel is declared by adding <-chan before the channel type. This restricts the channel to only receiving values.
+```
+package main
+
+import "fmt"
+
+func receiveValues(ch <-chan int) {
+    value := <-ch
+    fmt.Println("Received:", value)
+}
+
+func main() {
+    // Create a bidirectional channel
+    ch := make(chan int)
+
+    // Start a goroutine to receive a value
+    go receiveValues(ch)
+
+    // Send a value into the channel
+    ch <- 42
+}
+In this example, the receiveValues function takes a receive-only channel (<-chan int). The function can receive values from the channel but cannot send into it.
+```
+- There are 3 ways in which go routines can be controlled
+-- wait groups
+-- time.sleep()
+-- synchronized channels : In Go, all channels are synchronized by default. This means operations on channels (sending and receiving) are blocking and provide thread-safe communication between goroutines.
+
+- A good example
+```
+package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+func worker(id int, tasks <-chan int, wg *sync.WaitGroup) {
+    defer wg.Done()
+    for task := range tasks {
+        fmt.Printf("Worker %d processing task %d\n", id, task)
+        time.Sleep(time.Second) // Simulate work
+    }
+}
+
+func main() {
+    tasks := make(chan int, 10)
+    var wg sync.WaitGroup
+
+    // Start 3 workers
+    for i := 1; i <= 3; i++ {
+        wg.Add(1)
+        go worker(i, tasks, &wg)
+    }
+
+    // Send tasks
+    for i := 1; i <= 5; i++ {
+        tasks <- i
+    }
+    close(tasks) // Close the channel to signal no more tasks
+
+    wg.Wait() // Wait for all workers to finish
+}
+
+```
+- Mutex Locks : Mutex locks are a synchronization primitive used to prevent race conditions by ensuring that only one goroutine can access a shared resource at a time. In Go, the sync package provides the Mutex type, which is used to implement mutual exclusion.
+
+Example : 
+
+```
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+var (
+    count int
+    mu    sync.Mutex
+)
+
+func increment(wg *sync.WaitGroup) {
+    defer wg.Done()
+    mu.Lock()   // Acquire the lock
+    count++     // Critical section
+    mu.Unlock() // Release the lock
+}
+
+func main() {
+    var wg sync.WaitGroup
+
+    // Start 10 goroutines
+    for i := 0; i < 10; i++ {
+        wg.Add(1)
+        go increment(&wg)
+    }
+
+    wg.Wait()
+    fmt.Println("Final count:", count)
+}
+
+```
+Note : Read-Write Mutex (sync.RWMutex): Allows multiple concurrent readers but only one writer at a time.
