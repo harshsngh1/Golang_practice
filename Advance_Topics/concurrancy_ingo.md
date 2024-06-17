@@ -62,6 +62,7 @@ In Go, a select statement is used to work with multiple channels, allowing you t
 The select statement looks somewhat like a switch statement but is specifically designed for dealing with channel operations
 
 # Syntax
+```
 select {
 case <-channel1:
     // Code to execute when data is received from channel1
@@ -72,7 +73,7 @@ case channel3 <- value:
 default:
     // Code to execute when no channel operation is ready
 }
-
+```
 Key points about the select statement:
 
 - It allows you to wait for multiple channel operations simultaneously.
