@@ -13,6 +13,7 @@
     Here i will have the index and j will have the value
 - For loop range can used on channels as well.
     ### Example :
+    ```
     chnl := make(chan int)
     go func() {
         chnl <- 10
@@ -25,8 +26,10 @@
         fmt.Println(i)
     }
     This is how we can do it.
+    ```
 - For loop/range loop can be used on objects as well in golnag.
     ### Example : 
+    ```
     mmap := map[int]string{
         0:"a",
         1:"b",
@@ -35,21 +38,27 @@
     for key,value: range mmap {
         fmt.Println(key,vale)
     }
+    ```
 - Variadic Functoins : A function that can take n number of parameters of same type
     ### Example : 
+    ```
     func variadic(v...int) {
         fmt.Println("Elements are", v)
     }
     here in above example v will be treated as slice and can take 0 to n number of arguments
+    ```
 - Variadic functions can also be called with a slice, using the ... operator to unpack the slice into individual arguments
     ### Example : 
+    ```
     nums := []int{1, 2, 3, 4, 5}
     fmt.Println(sum(nums...)) // Outputs: 15
     Its main examples can be Println() function of golang
+    ```
 
 - Anonymous functions : The functions where the function name is not given and are called just after they are defined.
     Anonymous functions, also known as function literals or lambda expressions, are functions defined without a name. In Go, you can create anonymous functions inline, often as arguments to other functions or assigned to variables. They are particularly useful in scenarios where you need to define a small, one-off function without the need for a separate named function declaration.
     ### Example : 
+    ```
     func() {
         fmt.Println("This is anonymous function")
     }() <- Here only we have called this function
@@ -65,12 +74,13 @@
     result := add(3, 4)
     fmt.Println(result) // Outputs: 7
     }
-
+    ```
 - Init Function : The init() function is called automatically by the Go runtime before the main() function in the same package, or in the order of package import if there are multiple init() functions in different packages.
 It neither takes any arguments and not have any return type.
 
 - Closure functions : Closure functions, also known simply as closures, are functions that capture and retain the environment in which they are defined. This means they can access variables that are defined outside of their own scope. In Go, closures are implemented as anonymous functions.
     ### Example : 
+    ```
     func main() {
     x := 10
 
@@ -83,6 +93,7 @@ It neither takes any arguments and not have any return type.
     increment() // Outputs: 11
     increment() // Outputs: 12
     }
+    ```
     Closures are often used when you want to create functions that exhibit behavior based on some state that persists across multiple function calls. They are particularly useful in scenarios such as event handlers, callback functions, or when creating iterators.
 
     ### Another Example : 
