@@ -5,10 +5,7 @@
 - Slices and maps are always passed by reference in a function by default
 - channels are also always passed by reference in a function just like slices and maps
 - "defer" keyword : delays the execution of a function or statement until the nearby function returns
-- String defined using backticks [``] are called raw literals and are different from the ones defined usinging double quotes, as in strings with back ticks the escape charecters like \n or \t are not considered and are treated as part of string only
-    ### Example : s := `sdasdsadsadasd \n adsaasasas`
-    here above s will have the whole word with it.
-- Strings are immutable in golang, they cannot be changed
+- Go now supports "generic" from go 1.18 update
 - Range loop is used on slice in golang, which has two values i,j = range <name of slice/array/strings>
     Here i will have the index and j will have the value
 - For loop range can used on channels as well.
@@ -39,94 +36,51 @@
         fmt.Println(key,vale)
     }
     ```
-- Variadic Functoins : A function that can take n number of parameters of same type
-    ### Example : 
-    ```
-    func variadic(v...int) {
-        fmt.Println("Elements are", v)
-    }
-    here in above example v will be treated as slice and can take 0 to n number of arguments
-    ```
-- Variadic functions can also be called with a slice, using the ... operator to unpack the slice into individual arguments
-    ### Example : 
-    ```
-    nums := []int{1, 2, 3, 4, 5}
-    fmt.Println(sum(nums...)) // Outputs: 15
-    Its main examples can be Println() function of golang
-    ```
-
-- Anonymous functions : The functions where the function name is not given and are called just after they are defined.
-    Anonymous functions, also known as function literals or lambda expressions, are functions defined without a name. In Go, you can create anonymous functions inline, often as arguments to other functions or assigned to variables. They are particularly useful in scenarios where you need to define a small, one-off function without the need for a separate named function declaration.
-    ### Example : 
-    ```
-    func() {
-        fmt.Println("This is anonymous function")
-    }() <- Here only we have called this function
-
-    ### Another example of Anonymous function : 
-    func main() {
-    // Defining an anonymous function and assigning it to a variable
-    add := func(x, y int) int {
-        return x + y
-    }
-
-    // Calling the anonymous function via the variable
-    result := add(3, 4)
-    fmt.Println(result) // Outputs: 7
-    }
-    ```
 - Init Function : The init() function is called automatically by the Go runtime before the main() function in the same package, or in the order of package import if there are multiple init() functions in different packages.
 It neither takes any arguments and not have any return type.
+They are used to initialise DB connections or establish some of the objects before initiation
+- Main function is also a go routine
+- Go routines are executed concurrently
+- Go routines are executed in a thread pool
 
-- Closure functions : Closure functions, also known simply as closures, are functions that capture and retain the environment in which they are defined. This means they can access variables that are defined outside of their own scope. In Go, closures are implemented as anonymous functions.
-    ### Example : 
-    ```
-    func main() {
-    x := 10
+### Panic and recover Keyword : 
+In Go, panic and recover are mechanisms used for handling unexpected conditions and errors in a program. They provide a way to deal with situations that are not typically managed through regular error handling.
+- Panic : It is used to stop the execution of the program and print the error message
+- When a function calls panic, the function's execution stops immediately, and any deferred functions are executed. The program then unwinds the stack, running any deferred functions until it reaches the top of the goroutine's stack. At this point, the program exits with a non-zero exit status.
+- panic is typically used to indicate an unrecoverable error, such as a programming mistake (e.g., accessing an out-of-bounds index in a slice) or an unexpected state that should cause the program to terminate.
+- There are two types of panic : custom and system
+- Custom panic : It is used to create a custom panic message and exit the program
+- System panic : It is used to handle system panics, which are caused by the Go runtime
 
-    // Closure function that captures variable x
-    increment := func() {
-        x++
-        fmt.Println(x)
-    }
 
-    increment() // Outputs: 11
-    increment() // Outputs: 12
-    }
-    ```
-    Closures are often used when you want to create functions that exhibit behavior based on some state that persists across multiple function calls. They are particularly useful in scenarios such as event handlers, callback functions, or when creating iterators.
-
-    ### Another Example : 
+- Recover : It is used to recover the program from panic and continue the execution of the program
+- Recover is used inside a defer function
+- Recover can only be called from within a deferred function. If it is called outside of a deferred
+function, it will panic with the value nil.
+- Recover can only be called once per panic. If it is called more than once, it will
+panic with the value nil.
+- When called within a deferred function, recover captures the value passed to panic and stops the panicking sequence, allowing the program to continue running.
+- recover is used to handle panics gracefully, enabling the program to recover from unexpected conditions without crashing.
+### Example
 ```
-    func counter() func() int {
-    count := 0
-    return func() int {
-        count++
-        return count
+func safeDivide(a, b int) int {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from panic:", r)
         }
-    }
+    }()
 
-    func main() {
-        next := counter()
-        fmt.Println(next()) // Outputs: 1
-        fmt.Println(next()) // Outputs: 2
-        fmt.Println(next()) // Outputs: 3
+    if b == 0 {
+        panic("division by zero")
     }
-```
-- Methods and functions are different in Golang, methods have receivers whereas functions dont have receivers
-Example of method : 
-```
-func (v values) add(a,b int) int {
-    return a + b + v.first + v.second
+    return a / b
 }
 
-here values is a struct having first and second and  (v values) is receiver and add is name of method
-The receiver v is an instance of the values type, meaning the method can access the fields and other methods of values.
+func main() {
+    fmt.Println("Result:", safeDivide(4, 2)) // Output: Result: 2
+    fmt.Println("Result:", safeDivide(4, 0)) // Output: Recovered from panic: division by zero
+                                            //         Result: 0
+}
 ```
-
-
-
-
-
 
 Chatgpt learning : https://chat.openai.com/share/ce2a9c9b-b448-4684-ab11-a1e96d9b3549
