@@ -101,3 +101,42 @@ Similarities Between Java and Golang
 Differences Between Spring Boot (Java) and Golang
 - Relies heavily on annotations and external configurations (like properties files or YAML files). It provides features like dependency injection, aspect-oriented programming, and a wide range of integrations with other technologies (databases, messaging systems, etc.). Does not have an equivalent built-in framework like Spring Boot. Developers often use standard libraries and third-party packages to build web applications. Configuration is typically managed through environment variables or configuration files, without the extensive use of annotations.
 - Emphasizes an object-oriented programming (OOP) approach. The framework integrates well with other Java EE features and promotes a layered architecture. Focuses on a procedural and concurrent programming model. It uses interfaces and composition over inheritance, which aligns with its simplicity and performance goals.
+
+### what is type assertion and type conversion in golang?
+Type assertion is used to extract the actual value of an interface variable. It allows you to access the underlying concrete value stored in an interface variable. The syntax for type assertion is x.(T), where x is the interface variable and T is the type you are asserting x to be.
+```
+package main
+
+import "fmt"
+
+func main() {
+    var i interface{} = "hello"
+
+    // Type assertion
+    s, ok := i.(string)
+    if ok {
+        fmt.Println(s) // Output: hello
+    } else {
+        fmt.Println("Type assertion failed")
+    }
+}
+In this example, i is an interface that holds a string value. The type assertion i.(string) is used to extract the string value. If the assertion is successful, ok will be true and s will contain the string value. If the assertion fails, ok will be false and the program can handle the failure accordingly.
+```
+Type conversion is used to convert a value of one type to another type. The syntax for type conversion is T(x), where T is the target type and x is the value to be converted.
+```
+package main
+
+import "fmt"
+
+func main() {
+    var i int = 42
+    var f float64 = float64(i) // Type conversion from int to float64
+
+    fmt.Println(f) // Output: 42.0
+
+    var x float64 = 42.5
+    var y int = int(x) // Type conversion from float64 to int
+
+    fmt.Println(y) // Output: 42
+}
+```
