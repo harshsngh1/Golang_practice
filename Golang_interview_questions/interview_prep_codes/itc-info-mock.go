@@ -12,6 +12,22 @@ package main
 
 import "fmt"
 
+type (
+	Shape interface {
+		getArea() float64
+	}
+
+	Square struct {
+		side float64
+	}
+
+	Mat struct {
+		shapes []Shape
+	}
+
+	tShapeCh chan Shape
+)
+
 func main() {
 
 	nums := generateNum()
@@ -39,22 +55,6 @@ func main() {
 	}
 
 }
-
-type (
-	Shape interface {
-		getArea() float64
-	}
-
-	Square struct {
-		side float64
-	}
-
-	Mat struct {
-		shapes []Shape
-	}
-
-	tShapeCh chan Shape
-)
 
 func (s *Square) getArea() float64 {
 
