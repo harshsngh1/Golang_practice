@@ -82,5 +82,50 @@ func main() {
                                             //         Result: 0
 }
 ```
+### File Handling concepts
+> Buffer Reader and Normal Reader:
+- Buffered reader ek intermediate buffer ka use karta hai jo file se data ko chunks me load karta hai aur phir in-memory buffer se read karta hai, Buffered reader performance ko improve karta hai kyunki wo multiple reads ko combine karta hai ek hi file system access me. Data pehle buffer me load hota hai aur phir buffer se read hota hai, jo fast hota hai.
+```
+Buffered reader me aap bufio package ka NewReader ya NewScanner use karte hain.
+
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "os"
+    "log"
+)
+
+func main() {
+    // File ko open karna
+    file, err := os.Open("logfile.txt")
+    if err != nil {
+        log.Fatalf("Failed to open file: %s", err)
+    }
+    defer file.Close()
+
+    // Buffered reader ka use karna
+    scanner := bufio.NewScanner(file)
+    
+    lineNumber := 0
+    for scanner.Scan() {
+        lineNumber++
+        // Har line ko read karna
+        line := scanner.Text()
+        // Process the line (aap apne hisab se process kar sakte hain)
+        fmt.Println(line)
+    }
+
+    if err := scanner.Err(); err != nil {
+        log.Fatalf("Error reading file: %s", err)
+    }
+
+    fmt.Printf("Total lines read: %d\n", lineNumber)
+}
+```
+- Normal reader directly file se data ko read karta hai bina kisi buffer ke. Jab aap normal reader use karte hain, to har baar jab bhi aap read operation karte hain, wo file system se ek access request karta hai.
+
+
 
 Chatgpt learning : https://chat.openai.com/share/ce2a9c9b-b448-4684-ab11-a1e96d9b3549

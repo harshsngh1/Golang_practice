@@ -75,8 +75,7 @@ num := copy(destination_slice,source_slice)
 - The capacity allows you to pre-allocate memory for the slice, which can improve performance if you know the expected size of the slice in advance.
 - The values of the elements in the slice will be set to their zero values based on the type (e.g., 0 for integers, empty string for strings, nil for pointers).
 - In summary, if you already know the expected size of the slice and want to pre-allocate memory for better performance, use make. 
-- If you don't know the expected size of the slice or want to allocate memory dynamically, use
-- make([]int, 5, 10) // first is length and second is capacity
+- If you don't know the expected size of the slice or want to allocate memory dynamically, use append.
 ## Operations on slices
 - To compare two slices, you need to manually compare their lengths and each corresponding element. Alternatively, you can use the reflect.DeepEqual function from the reflect package for deep comparison.
 - Slices are also assignable, which means that you can assign one slice to another slice of the
