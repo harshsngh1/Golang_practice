@@ -249,3 +249,101 @@ func main() {
 
 ```
 Note : Read-Write Mutex (sync.RWMutex): Allows multiple concurrent readers but only one writer at a time.
+
+> Kab Close Karna Chahiye Channel
+- Producer-Consumer Pattern: 
+Agar aap ek pattern use kar rahe hain jahan ek goroutine data produce kar rahi hai aur doosri consume kar rahi hai, to jab producer apna kaam complete kar leta hai, tab channel close kar dena chahiye.
+
+```
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func data(ch chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := 1; i <= 10; i++ {
+		ch <- i
+	}
+	close(ch) // Producer ne apna kaam complete kar liya, channel close
+}
+
+func checkEven(ch chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := range ch {
+		if i%2 == 0 {
+			fmt.Println(i)
+		}
+	}
+}
+
+func main() {
+	var wg sync.WaitGroup
+	ch := make(chan int, 10)
+	wg.Add(2)
+	go data(ch, &wg)
+	go checkEven(ch, &wg)
+	wg.Wait()
+}
+```
+
+- Signaling Completion: 
+Agar koi goroutine dusre goroutines ko yeh signal dena chahti hai ki iska kaam khatam ho gaya, to wo channel close kar sakti hai. Yeh usually tab hota hai jab aap broadcast karte hain ki ab koi naya data nahi aayega.
+
+- Fixed Work:
+Agar aapka program ek fixed amount of work kar raha hai aur aapko pata hai ki kab wo complete ho jayega, to uske baad channel close kar dena chahiye.
+
+> Kab Close Nahi Karna Chahiye Channel
+- Multiple Writers: 
+Agar multiple goroutines ek hi channel pe likh rahe hain, to koi bhi goroutine channel ko close nahi karni chahiye, kyunki isse race conditions aur undefined behavior ho sakta hai.
+
+- Unidirectional Channels: 
+Agar aapka channel sirf ek direction mein data bhej raha hai (ya to sirf receive ya sirf send), aur close karne ka koi specific reason nahi hai, to close nahi karna chahiye.
+
+### Proper Channel Closing
+> The general rule is:
+- Only the sender should close a channel. Receivers should never close the channel as it may still be in use by the sender.
+- Close the channel when no more data will be sent on it. This signals to the receivers that they can stop waiting for data.
+### Good Example : 
+```
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func data(ch chan int) {
+	for i := 1; i <= 10; i++ {
+		ch <- i
+	}
+	close(ch) // channel ko yahan close karna
+}
+
+func checkEven(ch chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := range ch {
+		if i%2 == 0 {
+			fmt.Println(i)
+		}
+	}
+}
+
+func main() {
+	var wg sync.WaitGroup
+	ch := make(chan int, 10)
+
+	// data goroutine launch karna
+	go data(ch) // data ko waitgroup se hatake normal function banate hain
+
+	// checkEven goroutine launch karna
+	wg.Add(1)
+	go checkEven(ch, &wg)
+
+	// Sab goroutines ke khatam hone ka wait karna
+	wg.Wait()
+}
+
+```
