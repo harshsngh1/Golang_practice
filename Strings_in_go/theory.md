@@ -5,9 +5,9 @@
     here above s will have the whole word with it.
 - strings package have the following inbuilt methods to trim
 ```
-strings.Trim(<string_name>,<charecter_from_hich_to_trim>)
-strings.TrimLeft(<string_name>,<charecter_from_hich_to_trim>)
-strings.TrimRight(<string_name>,<charecter_from_hich_to_trim>)
+strings.Trim(<string_name>,<charecter_from_which_to_trim>)
+strings.TrimLeft(<string_name>,<charecter_from_which_to_trim>)
+strings.TrimRight(<string_name>,<charecter_from_which_to_trim>)
 strings.TrimSpace(<string_name>)
 ```
 - strings package have the following inbuilt methods to split

@@ -24,7 +24,7 @@
     }
     This is how we can do it.
     ```
-- For loop/range loop can be used on objects as well in golnag.
+- For loop/range loop can be used on objects as well in golang.
     ### Example : 
     ```
     mmap := map[int]string{
@@ -125,6 +125,8 @@ func main() {
 }
 ```
 - Normal reader directly file se data ko read karta hai bina kisi buffer ke. Jab aap normal reader use karte hain, to har baar jab bhi aap read operation karte hain, wo file system se ek access request karta hai.
+
+- GOMAXPROCS: Controls the number of OS threads used for executing goroutines.
 
 
 

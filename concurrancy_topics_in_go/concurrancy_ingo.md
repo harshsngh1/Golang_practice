@@ -5,12 +5,9 @@
 
 ## Go Schedular
 - Golang scheduler is a cooperative scheduler.
-- Cooperative scheduling is a style of scheduling in which the OS never interrupts a running
-  process to initiate a context switch from one process to another. 
-- Processes must voluntarily yield control periodically or when logically blocked on a
-  resource.
-- Of course, there are some specific check points where go-routine can yield its execution
-  to other go-routine. These are called context switches
+- Cooperative scheduling is a style of scheduling in which the OS never interrupts a running process to initiate a context switch from one process to another. 
+- Processes must voluntarily yield control periodically or when logically blocked on a resource.
+- Of course, there are some specific check points where go-routine can yield its execution to other go-routine. These are called context switches
 - It is upto schedular to decide to do weather context switching is requried or not.
 - channels by design prevent race condition from hapenning
 
