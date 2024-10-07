@@ -185,3 +185,12 @@ u := user{name: "John", age: 25, email: "john@example.com", address: "123 Main S
 ```
 In Go, anonymous structs are structs that are defined without a name and are typically used for short-lived data structures that are not reused elsewhere in the code. They can be useful for creating quick, temporary data structures, often within functions or when grouping multiple values together without the need to define a named struct type.
 More examples in stucts.go
+> Stucts in golang can have interfaces as well
+```
+type APIHandler struct {
+    eventTracker     EventTracker
+    affinityCalculator AffinityCalculator
+    feedGenerator    FeedGenerator
+}
+```
+here these are interfaces and have methods in them.
