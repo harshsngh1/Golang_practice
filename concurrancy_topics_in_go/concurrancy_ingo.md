@@ -344,3 +344,44 @@ func main() {
 }
 
 ```
+We also have ok syntax of closing channel :   
+```
+ch:=make(chan int)
+close(ch)
+elem,ok:=<-ch // elem will be 0 and ok will be false as channel is closed
+fmt.Println(elem,ok)
+```
+This is useful when we want to check weather channel is closed or not.
+- Graceful termination of goroutines : 
+```
+func worker(ch <-chan int) {
+    for {
+        value, ok := <-ch
+        if !ok {
+            // Channel is closed, time to exit
+            fmt.Println("Channel closed, worker exiting")
+            return
+        }
+        // Process the value
+        fmt.Println("Received:", value)
+    }
+}
+```
+-  Distinguishing between zero values and closed channels:
+```
+func processData(ch <-chan int) {
+    for {
+        value, ok := <-ch
+        if !ok {
+            // Channel is closed
+            break
+        }
+        if value == 0 {
+            // Got a real zero value, not a closed channel
+            fmt.Println("Received zero")
+        } else {
+            fmt.Println("Received:", value)
+        }
+    }
+}
+```

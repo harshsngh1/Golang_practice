@@ -10,7 +10,7 @@ strings.TrimLeft(<string_name>,<charecter_from_which_to_trim>)
 strings.TrimRight(<string_name>,<charecter_from_which_to_trim>)
 strings.TrimSpace(<string_name>)
 ```
-- strings package have the following inbuilt methods to split
+- strings package have the following inbuilt methods to **split**
 ```
 strings.Split(<string_name>,<from_where_to_split>)
 example : sgtrings.Split(str,",")
@@ -25,7 +25,7 @@ example : strings.Join(str,",")
 strings.JoinN(<string_name>,<from_where_to_split>,<number_of_splits>)
 example : strings.JoinN(str,",",2)
 ```
-- The strings.Fields method in Go is used to split a given string into a slice of strings, using one or more consecutive whitespace characters as the delimiter. It returns a slice containing all the fields of the input string, with any leading and trailing whitespace removed.
+- The **strings.Fields** method in Go is used to split a given string into a slice of strings, using one or more consecutive whitespace characters as the delimiter. It returns a slice containing all the fields of the input string, with any leading and trailing whitespace removed.
 ```
 package main
 

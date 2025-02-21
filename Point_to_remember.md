@@ -129,5 +129,9 @@ func main() {
 - GOMAXPROCS: Controls the number of OS threads used for executing goroutines.
 
 
+- Maps are reference types in golang, means when a map is assigned to a new variable, it does not create a new copy of the map, but rather both variables refer to the same underlying data structure.
+    - This means that changes made to one map will be reflected in the other.
+- Slices are also reference types in golang, means when a slice is assigned to a new variable, it does not create a new copy of the slice, but rather both variables refer to the same underlying data structure.
+
 
 Chatgpt learning : https://chat.openai.com/share/ce2a9c9b-b448-4684-ab11-a1e96d9b3549
