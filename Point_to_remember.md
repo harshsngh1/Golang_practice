@@ -128,6 +128,8 @@ func main() {
 
 - GOMAXPROCS: Controls the number of OS threads used for executing goroutines.
 
+- If you’ve ever needed to run a task every few seconds, like syncing data, sending heartbeats, or polling a server — time.Ticker package can be useful tool.
+
 
 
 Chatgpt learning : https://chat.openai.com/share/ce2a9c9b-b448-4684-ab11-a1e96d9b3549
